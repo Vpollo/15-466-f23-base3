@@ -36,13 +36,13 @@ Load< Scene > hexapod_scene(LoadTagDefault, []() -> Scene const * {
 	});
 });
 
-Load< Sound::Sample > dusty_floor_sample(LoadTagDefault, []() -> Sound::Sample const * {
-	return new Sound::Sample(data_path("dusty-floor.opus"));
-});
-
-// Load< Sound::Sample > footstep1_sample(LoadTagDefault, []() -> Sound::Sample const * {
-// 	return new Sound::Sample(data_path("footsteps/footstep1.wav"));
+// Load< Sound::Sample > dusty_floor_sample(LoadTagDefault, []() -> Sound::Sample const * {
+// 	return new Sound::Sample(data_path("dusty-floor.opus"));
 // });
+
+Load< Sound::Sample > footstep1_sample(LoadTagDefault, []() -> Sound::Sample const * {
+	return new Sound::Sample(data_path("footsteps/footstep1.wav"));
+});
 
 PlayMode::PlayMode() : scene(*hexapod_scene) {
 	//get pointers to leg for convenience:
@@ -65,7 +65,7 @@ PlayMode::PlayMode() : scene(*hexapod_scene) {
 
 	//start music loop playing:
 	// (note: position will be over-ridden in update())
-	leg_tip_loop = Sound::loop_3D(*dusty_floor_sample, 1.0f, get_leg_tip_position(), 10.0f);
+	// leg_tip_loop = Sound::loop_3D(*dusty_floor_sample, 1.0f, get_leg_tip_position(), 10.0f);
 }
 
 PlayMode::~PlayMode() {
@@ -152,7 +152,7 @@ void PlayMode::update(float elapsed) {
 	);
 
 	//move sound to follow leg tip position:
-	leg_tip_loop->set_position(get_leg_tip_position(), 1.0f / 60.0f);
+	// leg_tip_loop->set_position(get_leg_tip_position(), 1.0f / 60.0f);
 
 	//move camera:
 	{
@@ -210,6 +210,7 @@ void PlayMode::draw(glm::uvec2 const &drawable_size) {
 	if (can_generate_wave) {
 		time_last_wave = time_elapsed;
 		last_wave_camera_pos = camera->transform->position;
+		Sound::play(*footstep1_sample);
 		can_generate_wave = false;
 		wave_cd = WAVE_COOL_DOWN;
 	}
