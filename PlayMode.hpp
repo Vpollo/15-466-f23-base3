@@ -29,15 +29,15 @@ struct PlayMode : Mode {
 	Scene scene;
 
 	//hexapod leg to wobble:
-	Scene::Transform *hip = nullptr;
-	Scene::Transform *upper_leg = nullptr;
-	Scene::Transform *lower_leg = nullptr;
-	glm::quat hip_base_rotation;
-	glm::quat upper_leg_base_rotation;
-	glm::quat lower_leg_base_rotation;
-	float wobble = 0.0f;
+	// Scene::Transform *hip = nullptr;
+	// Scene::Transform *upper_leg = nullptr;
+	// Scene::Transform *lower_leg = nullptr;
+	// glm::quat hip_base_rotation;
+	// glm::quat upper_leg_base_rotation;
+	// glm::quat lower_leg_base_rotation;
+	// float wobble = 0.0f;
 
-	glm::vec3 get_leg_tip_position();
+	// glm::vec3 get_leg_tip_position();
 
 	//music coming from the tip of the leg (as a demonstration):
 	// std::shared_ptr< Sound::PlayingSample > leg_tip_loop;
@@ -53,6 +53,7 @@ struct PlayMode : Mode {
 	float time_elapsed = 0.0f;
 	float time_last_wave = 0.0f;
 	glm::vec3 last_wave_camera_pos = glm::vec3(999999.0f);
+	glm::vec3 last_frame_pos = glm::vec3(999999.0f);
 
 	//footstep sound
 	// std::shared_ptr< Sound::PlayingSample > footstep1;

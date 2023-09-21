@@ -111,7 +111,9 @@ LitColorTextureProgram::LitColorTextureProgram() {
 		"   float dist_y = CAMERA_POS.y - position.y;\n"
 		"   float dist = sqrt(dist_x*dist_x + dist_y*dist_y);\n"
 		"   float x = TIME - TIME_LAST;\n"
-		"	fragColor = vec4(vec3(1.0, 1.0, 1.0)*(-pow((0.7*(15.0*x-dist)),2)+1), albedo.a);\n"
+		"   float decay = -0.5 * x + 1.0;\n"
+		"   if (decay < 0.0) decay = 0.0;\n"
+		"	fragColor = vec4(vec3(1.0, 1.0, 1.0)*(-pow((0.7*(15.0*x-dist)),2)+1)*decay, albedo.a);\n"
 		"}\n"
 	);
 	//As you can see above, adjacent strings in C/C++ are concatenated.
