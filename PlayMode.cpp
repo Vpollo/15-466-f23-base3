@@ -40,6 +40,10 @@ Load< Sound::Sample > dusty_floor_sample(LoadTagDefault, []() -> Sound::Sample c
 	return new Sound::Sample(data_path("dusty-floor.opus"));
 });
 
+// Load< Sound::Sample > footstep1_sample(LoadTagDefault, []() -> Sound::Sample const * {
+// 	return new Sound::Sample(data_path("footsteps/footstep1.wav"));
+// });
+
 PlayMode::PlayMode() : scene(*hexapod_scene) {
 	//get pointers to leg for convenience:
 	for (auto &transform : scene.transforms) {
@@ -128,6 +132,7 @@ bool PlayMode::handle_event(SDL_Event const &evt, glm::uvec2 const &window_size)
 }
 
 void PlayMode::update(float elapsed) {
+	time_elapsed += elapsed;
 
 	//slowly rotates through [0,1):
 	wobble += elapsed / 10.0f;
@@ -183,6 +188,12 @@ void PlayMode::update(float elapsed) {
 	right.downs = 0;
 	up.downs = 0;
 	down.downs = 0;
+
+	//CD wave generation
+	if (!can_generate_wave) {
+		wave_cd -= elapsed;
+		if (wave_cd <= 0.0f) can_generate_wave = true;
+	}
 }
 
 void PlayMode::draw(glm::uvec2 const &drawable_size) {
@@ -195,6 +206,16 @@ void PlayMode::draw(glm::uvec2 const &drawable_size) {
 	glUniform1i(lit_color_texture_program->LIGHT_TYPE_int, 1);
 	glUniform3fv(lit_color_texture_program->LIGHT_DIRECTION_vec3, 1, glm::value_ptr(glm::vec3(0.0f, 0.0f,-1.0f)));
 	glUniform3fv(lit_color_texture_program->LIGHT_ENERGY_vec3, 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 0.95f)));
+	//wave generation
+	if (can_generate_wave) {
+		time_last_wave = time_elapsed;
+		last_wave_camera_pos = camera->transform->position;
+		can_generate_wave = false;
+		wave_cd = WAVE_COOL_DOWN;
+	}
+	glUniform1f(lit_color_texture_program->TIME_float, time_elapsed);
+	glUniform1f(lit_color_texture_program->TIME_LAST_float, time_last_wave);
+	glUniform3fv(lit_color_texture_program->CAMERA_POS_vec3, 1, glm::value_ptr(last_wave_camera_pos));
 	glUseProgram(0);
 
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);

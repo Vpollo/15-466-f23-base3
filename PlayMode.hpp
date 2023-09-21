@@ -45,4 +45,15 @@ struct PlayMode : Mode {
 	//camera:
 	Scene::Camera *camera = nullptr;
 
+	//for sound wave generation
+	bool can_generate_wave = true;
+	const float WAVE_COOL_DOWN = 2.0f;
+	float wave_cd = 0.0f;
+
+	float time_elapsed = 0.0f;
+	float time_last_wave = 0.0f;
+	glm::vec3 last_wave_camera_pos = glm::vec3(999999.0f);
+
+	//footstep sound
+	// std::shared_ptr< Sound::PlayingSample > footstep1;
 };
